@@ -9,7 +9,7 @@ module.exports = {
   },
     // get single thought
     getSingleThought(req, res) {
-        Thought.findOne({ _id: req.params.thoughtId})
+        Thought.findOne({ _id: req.params.id})
         .select('-__v')
         .then((thought) =>
           !thought
@@ -23,7 +23,7 @@ module.exports = {
         Thought.create(req.body)
         .then((thought) => {
             User.findOneAndUpdate(
-                { _id: req.body.userId },
+                { _id: req.body.id },
                 { $push: { thought: _id } },
                 { new: true, runValidators: true })
             res.json(thought)
@@ -32,7 +32,7 @@ module.exports = {
     },
     // Update a thought
     updateThought(req, res) {
-        Thought.findOneAndUpdate({_id: req.params.thoughtId},
+        Thought.findOneAndUpdate({_id: req.params.id},
             req.body,
             { new: true, runValidators: true })
             .then((thought)=> 
@@ -44,7 +44,7 @@ module.exports = {
     },
     // Delete a thought
     deleteThought(req, res){
-        Thought.findOneAndDelete({ _id: req.params.thoughtId })
+        Thought.findOneAndDelete({ _id: req.params.id })
         .then((thought)=> 
         !thought
         ? res.status(404).json({ message: 'No thought with that ID' })
@@ -67,7 +67,7 @@ module.exports = {
     removeReaction(req, res){
         Thought.findOneAndUpdate(
             { _id: req.params.thoughtId },
-            { $pull: { reactions: { _id: req.body.reactionId }}},
+            { $pull: { reactions: { _id: req.params.reactionId }}},
             {  new: true, runValidators: true})
         .then((thought)=> 
         !thought

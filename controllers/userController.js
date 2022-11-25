@@ -9,7 +9,7 @@ module.exports = {
     },
     // Get a single user
     getSingleUser(req, res) {
-      User.findOne({ _id: req.params.userId })
+      User.findOne({ _id: req.params.id })
       .populate({
         path: "thoughts",
         select: "-__v",
@@ -34,7 +34,7 @@ module.exports = {
     },
     // Update a user
     updateUser(req, res) {
-        User.findOneAndUpdate({_id: req.params.userId},
+        User.findOneAndUpdate({_id: req.params.id},
             { $set:
             {
             username: req.body.username,
@@ -50,7 +50,7 @@ module.exports = {
     },
     // Delete a user
     deleteUser(req, res) {
-      User.findOneAndDelete({ _id: req.params.userId })
+      User.findOneAndDelete({ _id: req.params.id })
         .then((user) =>
           !user
             ? res.status(404).json({ message: 'No user with that ID' })
@@ -77,7 +77,7 @@ module.exports = {
   removeFriend(req, res) {
     User.findOneAndUpdate(
       { _id: req.params.userId },
-      { $pull: { friends:{ _id: req.params.friendId }}},
+      { $pull: { friends:{ $in:[ req.params.friendId ]}}},
       { new: true, runValidators: true }
     )
     .then((user) => 
