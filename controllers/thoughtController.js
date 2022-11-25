@@ -23,8 +23,8 @@ module.exports = {
         Thought.create(req.body)
         .then((thought) => {
             User.findOneAndUpdate(
-                { _id: req.body.id },
-                { $push: { thought: _id } },
+                { _id: req.body.userId },
+                { $push: { thoughts: _id } },
                 { new: true, runValidators: true })
             res.json(thought)
         })
@@ -32,7 +32,8 @@ module.exports = {
     },
     // Update a thought
     updateThought(req, res) {
-        Thought.findOneAndUpdate({_id: req.params.id},
+        Thought.findOneAndUpdate(
+            {_id: req.params.id},
             req.body,
             { new: true, runValidators: true })
             .then((thought)=> 
